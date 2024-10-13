@@ -3,9 +3,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.runAlgoForComb = void 0;
 const board_js_1 = require("./board.js");
 const cacheCandidates = [];
+console.log('Candidiates: ' + JSON.stringify(cacheCandidates));
 const others = [];
+console.log('others: ' + others);
 const adjList = (0, board_js_1.buildAdjencyList)(6);
-const allCombinations = (0, board_js_1.getAllCombinations)(50, 2);
+const allCombinations = (0, board_js_1.getAllCombinations)(50, 1);
 function runAlgoForComb(comb, startField, endField) {
     const visited = [startField];
     const board = (0, board_js_1.initalizeBoard)(6, comb, 1);
@@ -28,11 +30,11 @@ function runAlgoBacktrack(board, visited, currScore, currField, endField, comb) 
         //console.log(`Landed on the Endfield ${JSON.stringify(cand)}`);
         return cand;
     }
-    if ((0, board_js_1.updateScore)(board, currField, currScore) === 2024 && currField === endField) {
+    if (currScore === 2024 && currField === endField) {
         const cand = {
             'comb': comb,
             'path': visited,
-            'score': (0, board_js_1.updateScore)(board, currField, currScore)
+            'score': currScore
         };
         cacheCandidates.push(cand);
         return cand;

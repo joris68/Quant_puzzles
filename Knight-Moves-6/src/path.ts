@@ -7,9 +7,11 @@ export type Candidate = {
 } | undefined
 
 const cacheCandidates: Candidate [] = [];
+console.log('Candidiates: ' + JSON.stringify(cacheCandidates));
 const others : Candidate [] = [];
+console.log('others: ' + others);
 const adjList  : AdjencyList = buildAdjencyList(6);
-const allCombinations = getAllCombinations(50, 2);
+const allCombinations = getAllCombinations(50, 1);
 
 
 
@@ -46,11 +48,11 @@ function runAlgoBacktrack(board: Board, visited: string [], currScore : number, 
             return cand;
         }
 
-        if(updateScore(board, currField , currScore ) === 2024 && currField === endField){
+        if(currScore === 2024 && currField === endField){
             const cand  = {
                 'comb' : comb,
                 'path' : visited,
-                'score' : updateScore(board, currField , currScore )
+                'score' : currScore
             }
             cacheCandidates.push(cand);
             return cand;

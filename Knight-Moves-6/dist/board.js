@@ -1,10 +1,43 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.initalizeBoard = void 0;
+exports.buildAdjencyList = exports.convertIndexToField = exports.convertFieldToIndex = exports.initalizeBoard = exports.getFieldValue = exports.updateScore = exports.getAllCombinations = void 0;
 //some constants
 const NUMBER_Bs = 2;
 const A_AND_C_combined = 4;
 const BOARD_SIZE = 6;
+const NOT_SURROUNDED = ['b1', 'a1', 'a2', 'a3', 'e6', 'f6', 'f5', 'f4', 'b2', 'e5', 'a4', 'f3'];
+const IndexToRows = {
+    0: '6',
+    1: '5',
+    2: '4',
+    3: '3',
+    4: '2',
+    5: '1'
+};
+const IndexToCols = {
+    0: 'a',
+    1: 'b',
+    2: 'c',
+    3: 'd',
+    4: 'e',
+    5: 'f'
+};
+const FieldToRows = {
+    '6': 0,
+    '5': 1,
+    '4': 2,
+    '3': 3,
+    '2': 4,
+    '1': 5
+};
+const FieldToCols = {
+    'a': 0,
+    'b': 1,
+    'c': 2,
+    'd': 3,
+    'e': 4,
+    'f': 5
+};
 /**
  *
  * A + B + C < 50
@@ -25,13 +58,42 @@ function getAllCombinations(upper_limit, lower_limit) {
     }
     return allCombinations;
 }
-// let a = getAllCombinations(50, 1)
-// console.log(a);
-// console.log(a.length);
+exports.getAllCombinations = getAllCombinations;
+// export function makeSurePathIsCorrect(path : string[], score : number, comb : Combination ) : boolean {
+//     const board : Board = initalizeBoard(6, comb, 1);
+//     const testScore = getFieldValue(convertFieldToIndex(path[0]), board);
+//     for (let x = 0; x < path.length; x++ ){
+//         updateScore()
+//     }
+//     if()
+// }
 // the score for a given field and board
-function getScoreforField(board, field, prevScore) {
-    return 1;
+function updateScore(board, field, prevScore) {
+    const indexPair = convertFieldToIndex(field);
+    const val = getFieldValue(indexPair, board);
+    let newScore;
+    if (inBetweenTwoIntegers(field)) {
+        newScore = prevScore * val;
+    }
+    else {
+        newScore = prevScore + val;
+    }
+    return newScore;
 }
+exports.updateScore = updateScore;
+function getFieldValue(indexPair, board) {
+    return board[indexPair[0]][indexPair[1]];
+}
+exports.getFieldValue = getFieldValue;
+function inBetweenTwoIntegers(field) {
+    if (NOT_SURROUNDED.includes(field)) {
+        return false;
+    }
+    else {
+        return true;
+    }
+}
+////////////////////////////////////////////////////////
 // build the board given the parameters A, B ,C 
 function initalizeBoard(boardSize, comb, startingA) {
     const board = [];
@@ -39,7 +101,6 @@ function initalizeBoard(boardSize, comb, startingA) {
     for (let x = 0; x < boardSize; x++) {
         if (x !== 0 && x % 2 === 0)
             As += 1;
-        console.log(As);
         board.push(buildRow(As, comb, A_AND_C_combined));
     }
     return board;
@@ -55,9 +116,51 @@ function buildRow(numberAs, comb, as_and_cs) {
         arr.push(comb[2]);
     return arr;
 }
+function convertFieldToIndex(field) {
+    const col = field.charAt(0);
+    const row = field.charAt(1);
+    const numericalRow = FieldToRows[row];
+    const numericalCol = FieldToCols[col];
+    return [numericalRow, numericalCol];
+}
+exports.convertFieldToIndex = convertFieldToIndex;
+function convertIndexToField(pair) {
+    return IndexToCols[pair[1]] + IndexToRows[pair[0]];
+}
+exports.convertIndexToField = convertIndexToField;
 // adjency list for knight moves for a given board size
 function buildAdjencyList(boardSize) {
-    return 1;
+    const adjList = {};
+    for (let x = 0; x < boardSize; x++) {
+        for (let y = 0; y < boardSize; y++) {
+            const indexPair = [x, y];
+            const field = convertIndexToField(indexPair);
+            adjList[field] = calculateNextSteps(field);
+        }
+    }
+    return adjList;
 }
-let board = initalizeBoard(BOARD_SIZE, [1, 2, 3], 1);
-console.log(board);
+exports.buildAdjencyList = buildAdjencyList;
+function calculateNextSteps(field) {
+    const indexGiven = convertFieldToIndex(field);
+    const allMoves = getAllMoves(indexGiven);
+    return allMoves.filter(isValidIndex).map(convertIndexToField);
+}
+function getAllMoves(indexPair) {
+    const result = [];
+    result.push([indexPair[0] - 2, indexPair[1] - 1]);
+    result.push([indexPair[0] - 2, indexPair[1] + 1]);
+    result.push([indexPair[0] - 1, indexPair[1] + 2]);
+    result.push([indexPair[0] + 1, indexPair[1] + 2]);
+    result.push([indexPair[0] + 2, indexPair[1] + 1]);
+    result.push([indexPair[0] + 1, indexPair[1] - 1]);
+    result.push([indexPair[0] + 1, indexPair[1] - 2]);
+    result.push([indexPair[0] - 1, indexPair[1] - 2]);
+    return result;
+}
+function isValidIndex(indexpair) {
+    return (indexpair[0] >= 0 && indexpair[0] <= 5 && indexpair[1] >= 0 && indexpair[1] <= 5);
+}
+let a = buildAdjencyList(6);
+console.log(a);
+//console.log(Object.keys(a).length);

@@ -3,8 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.runAlgoForComb = void 0;
 const board_js_1 = require("./board.js");
 const cacheCandidates = [];
+const others = [];
 const adjList = (0, board_js_1.buildAdjencyList)(6);
-const allCombinations = (0, board_js_1.getAllCombinations)(50, 1).reverse();
+const allCombinations = (0, board_js_1.getAllCombinations)(50, 2);
 function runAlgoForComb(comb, startField, endField) {
     const visited = [startField];
     const board = (0, board_js_1.initalizeBoard)(6, comb, 1);
@@ -13,15 +14,27 @@ function runAlgoForComb(comb, startField, endField) {
 }
 exports.runAlgoForComb = runAlgoForComb;
 function runAlgoBacktrack(board, visited, currScore, currField, endField, comb) {
-    //console.log(visited);
+    //console.log('Visited: ' + visited);
+    //console.log('Current Score: ' +  currScore);
     const allNextSteps = adjList[currField];
     const nextSteps = legalNextSteps(visited, allNextSteps);
-    if (currScore === 2024 && currField === endField) {
+    //console.log('Nextsteps: ' + nextSteps);
+    if (currField === endField) {
         const cand = {
             'comb': comb,
             'path': visited,
             'score': currScore
         };
+        //console.log(`Landed on the Endfield ${JSON.stringify(cand)}`);
+        return cand;
+    }
+    if ((0, board_js_1.updateScore)(board, currField, currScore) === 2024 && currField === endField) {
+        const cand = {
+            'comb': comb,
+            'path': visited,
+            'score': (0, board_js_1.updateScore)(board, currField, currScore)
+        };
+        cacheCandidates.push(cand);
         return cand;
     }
     if (nextSteps.length === 0)
@@ -39,3 +52,10 @@ function runAlgoBacktrack(board, visited, currScore, currField, endField, comb) 
 function legalNextSteps(visited, allnextSteps) {
     return allnextSteps.filter(obj => !visited.includes(obj));
 }
+for (let x = 0; x < allCombinations.length; x++) {
+    const currCombination = allCombinations[x];
+    runAlgoForComb(currCombination, 'a1', 'f6');
+    console.log(`Done ${x} iteration`);
+}
+console.log(cacheCandidates);
+console.log('Others' + JSON.stringify(others));

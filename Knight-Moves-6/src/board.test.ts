@@ -1,4 +1,7 @@
-import {initalizeBoard, convertFieldToIndex, convertIndexToField}  from './board.js'
+import {initalizeBoard, convertFieldToIndex, convertIndexToField, Board, getFieldValue, updateScore}  from './board.js'
+
+const realBoard : Board = initalizeBoard(6, [1,2,3], 1);
+console.log(realBoard);
 
 describe('testing for initializing the board', () => {
     it('build the deafult baord for a gven combination of given parameters', ()=> {
@@ -58,3 +61,21 @@ describe('testing indePair to string field function', () => {
     })
 });
 
+describe('testing the getField function', () => {
+    it('with [0,0]', () => {
+        expect(getFieldValue([0,0], realBoard)).toBe(1);
+    });
+    it('with [5,5]', () => {
+        expect(getFieldValue([5,5], realBoard)).toBe(3);
+    });
+
+    it('with [5,5]', () => {
+        expect(getFieldValue([0,5], realBoard)).toBe(3);
+    });
+});
+
+describe('testing the update score function', ()=> {
+    it('some', () => {
+        expect(updateScore(realBoard, 'b5', 3)).toBe(6)
+    });
+});

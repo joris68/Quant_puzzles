@@ -5,7 +5,7 @@ exports.buildAdjencyList = exports.convertIndexToField = exports.convertFieldToI
 const NUMBER_Bs = 2;
 const A_AND_C_combined = 4;
 const BOARD_SIZE = 6;
-const NOT_SURROUNDED = ['b1', 'a1', 'a2', 'a3', 'e6', 'f6', 'f5', 'f4'];
+const NOT_SURROUNDED = ['b1', 'a1', 'a2', 'a3', 'e6', 'f6', 'f5', 'f4', 'b2', 'e5', 'a4', 'f3'];
 const IndexToRows = {
     0: '6',
     1: '5',
@@ -161,6 +161,6 @@ function getAllMoves(indexPair) {
 function isValidIndex(indexpair) {
     return (indexpair[0] >= 0 && indexpair[0] <= 5 && indexpair[1] >= 0 && indexpair[1] <= 5);
 }
-// let a = buildAdjencyList(6);
-// console.log(a);
-// console.log(Object.keys(a).length);
+let a = buildAdjencyList(6);
+console.log(a);
+//console.log(Object.keys(a).length);

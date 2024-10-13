@@ -7,8 +7,9 @@ export type Candidate = {
 } | undefined
 
 const cacheCandidates: Candidate [] = [];
+const others : Candidate [] = [];
 const adjList  : AdjencyList = buildAdjencyList(6);
-const allCombinations = getAllCombinations(50, 1).reverse();
+const allCombinations = getAllCombinations(50, 2);
 
 
 
@@ -25,17 +26,33 @@ export function runAlgoForComb( comb : Combination, startField : string, endFiel
 }
 
 function runAlgoBacktrack(board: Board, visited: string [], currScore : number, currField : string, endField : string, comb: Combination):  Candidate | undefined {
-        //console.log(visited);
+        //console.log('Visited: ' + visited);
+        //console.log('Current Score: ' +  currScore);
         const allNextSteps = adjList[currField];
         const nextSteps : string[] = legalNextSteps(visited, allNextSteps);
+        //console.log('Nextsteps: ' + nextSteps);
 
 
-        if(currScore === 2024 && currField === endField){
-            const cand  = {
+        if(currField === endField){
+            const cand = {
                 'comb' : comb,
                 'path' : visited,
                 'score' : currScore
+
             }
+
+            //console.log(`Landed on the Endfield ${JSON.stringify(cand)}`);
+
+            return cand;
+        }
+
+        if(updateScore(board, currField , currScore ) === 2024 && currField === endField){
+            const cand  = {
+                'comb' : comb,
+                'path' : visited,
+                'score' : updateScore(board, currField , currScore )
+            }
+            cacheCandidates.push(cand);
             return cand;
         }
 
@@ -57,4 +74,13 @@ function legalNextSteps(visited : string [], allnextSteps: string[]) : string[] 
     return allnextSteps.filter(obj => !visited.includes(obj));
 }
 
+
+for(let x = 0; x < allCombinations.length; x++){
+    const currCombination = allCombinations[x];
+    runAlgoForComb(currCombination, 'a1', 'f6');
+    console.log(`Done ${x} iteration`);
+}
+
+console.log(cacheCandidates);
+console.log('Others' + JSON.stringify(others) );
 

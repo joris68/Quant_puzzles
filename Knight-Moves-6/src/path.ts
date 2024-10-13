@@ -1,6 +1,6 @@
 import {initalizeBoard, getAllCombinations, updateScore, buildAdjencyList, convertFieldToIndex, convertIndexToField, Board, AdjencyList, IndexPair, Combination, getFieldValue} from './board.js'
 
-type Candidate = {
+export type Candidate = {
     'comb' : Combination,
     'path' : String[];
     'score': number
@@ -8,11 +8,11 @@ type Candidate = {
 
 const cacheCandidates: Candidate [] = [];
 const adjList  : AdjencyList = buildAdjencyList(6);
-const allCombinations = getAllCombinations(50, 1);
+const allCombinations = getAllCombinations(50, 1).reverse();
 
 
 
-function runAlgoForComb( comb : Combination, startField : string, endField: string) : Candidate | undefined {
+export function runAlgoForComb( comb : Combination, startField : string, endField: string) : Candidate | undefined {
 
 
     const visited : string[] = [startField];
@@ -24,8 +24,8 @@ function runAlgoForComb( comb : Combination, startField : string, endField: stri
 
 }
 
-function runAlgoBacktrack(board: Board, visited: string [], currScore : number, currField : string, endField : string, comb: Combination):  Candidate {
-        console.log(visited);
+function runAlgoBacktrack(board: Board, visited: string [], currScore : number, currField : string, endField : string, comb: Combination):  Candidate | undefined {
+        //console.log(visited);
         const allNextSteps = adjList[currField];
         const nextSteps : string[] = legalNextSteps(visited, allNextSteps);
 
@@ -39,9 +39,9 @@ function runAlgoBacktrack(board: Board, visited: string [], currScore : number, 
             return cand;
         }
 
-        if(nextSteps.length === 0) return;
-        if(currScore >= 2024) return;
-        if(currField === endField && currScore !== 2024 ) return;
+        if(nextSteps.length === 0) return undefined;
+        if(currScore >= 2024) return undefined;
+        if(currField === endField && currScore !== 2024 ) return undefined;
    
 
 
@@ -56,20 +56,5 @@ function runAlgoBacktrack(board: Board, visited: string [], currScore : number, 
 function legalNextSteps(visited : string [], allnextSteps: string[]) : string[] {
     return allnextSteps.filter(obj => !visited.includes(obj));
 }
-
-
-let running = true;
-let counter = 0
-
-    const currCombination : Combination = [10,10,20];
-    const possCandidate = runAlgoForComb(currCombination, 'a1', 'f6')
-    if(possCandidate){
-        cacheCandidates.push(possCandidate);
-        console.log(possCandidate);
-    } else{
-        console.log(`Currcombination ${JSON.stringify(currCombination)} is not a a valid combination`)
-    }
-    counter++
-
 
 

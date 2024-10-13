@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "rimraf ./dist && tsc",
+    "start1": "npm run build && node dist/lowerLeftToRight.js",
+    "start2": "npm run build && node dist/upperLeftToRight.js"
   },
   "author": "",
   "license": "ISC",
@@ -11,6 +14,7 @@
   "devDependencies": {
     "@types/jest": "^29.5.13",
     "jest": "^29.7.0",
+    "rimraf": "^6.0.1",
     "ts-jest": "^29.2.5",
     "typescript": "^5.6.2"
   }

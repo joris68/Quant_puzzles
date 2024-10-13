@@ -76,6 +76,19 @@ export function getAllCombinations(upper_limit : number, lower_limit : number): 
     return allCombinations;
 }
 
+// export function makeSurePathIsCorrect(path : string[], score : number, comb : Combination ) : boolean {
+
+//     const board : Board = initalizeBoard(6, comb, 1);
+
+//     const testScore = getFieldValue(convertFieldToIndex(path[0]), board);
+//     for (let x = 0; x < path.length; x++ ){
+//         updateScore()
+//     }
+
+//     if()
+
+// }
+
 
 // the score for a given field and board
 export function updateScore(board: Board, field : string, prevScore : number) : number {
